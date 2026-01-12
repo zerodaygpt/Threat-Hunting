@@ -41,7 +41,7 @@ DeviceFileEvents
 
 ### 2. Searched the `DeviceProcessEvents` Table
 
-Searched for any `ProcessCommandLine` that contained the string "tor-browser-windows-x86_64-portable-14.0.1.exe". Based on the logs returned, at `2025-11-08T22:16:47.4484567Z`, an Cyber_range on the "threat-hunting-" device ran the file `tor-browser-windows-x86_64-portable-14.0.1.exe` from their Downloads folder, using a command that triggered a silent installation.
+Searched for any `ProcessCommandLine` that contained the string "tor-browser-windows-x86_64-portable-15.0.3.exe". Based on the logs returned, at `2025-11-08T22:16:47.4484567Z`, an Cyber_range on the "threat-hunting-" device ran the file `tor-browser-windows-x86_64-portable-15.0.3.exe` from their Downloads folder, using a command that triggered a silent installation.
 
 **Query used to locate event:**
 
@@ -49,7 +49,7 @@ Searched for any `ProcessCommandLine` that contained the string "tor-browser-win
 
 DeviceProcessEvents  
 | where DeviceName == ""threat-hunting-""  
-| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-14.0.1.exe"  
+| where ProcessCommandLine contains "tor-browser-windows-x86_64-portable-15.0.3.exe"  
 | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
 ```
 <img width="1212" alt="image" src="https://github.com/user-attachments/assets/b07ac4b4-9cb3-4834-8fac-9f5f29709d78">
@@ -84,11 +84,13 @@ DeviceNetworkEvents
 | where DeviceName == "threat-hunting-"  
 | where InitiatingProcessAccountName != "system"  
 | where InitiatingProcessFileName in ("tor.exe", "firefox.exe")  
-| where RemotePort in ("9001", "9030", "9040", "9050", "9051", "9150", "80", "443")  
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath  
+| where ActionType == "ConnectionSuccess"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath  
 | order by Timestamp desc
 ```
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/87a02b5b-7d12-4f53-9255-f5e750d0e3cb">
+<img width="2354" height="359" alt="image" src="https://github.com/user-attachments/assets/031b2424-9479-4640-be98-d0b9b68285d0" />
+
+
 
 ---
 
@@ -119,7 +121,7 @@ DeviceNetworkEvents
 ### 4. Network Connection - TOR Network
 
 - **Timestamp:** `2025-11-08T22:18:01.1246358Z`
-- **Event:** A network connection to IP `176.198.159.33` on port `9001` by user "Cyber_range" was established using `tor.exe`, confirming TOR browser network activity.
+- **Event:** A network connection to IP `152.53.254.25` on port `443` by user "Cyber_range" was established using `tor.exe`, confirming TOR browser network activity.
 - **Action:** Connection success.
 - **Process:** `tor.exe`
 - **File Path:** `c:\users\Cyber_range\desktop\tor browser\browser\torbrowser\tor\tor.exe`
@@ -127,8 +129,8 @@ DeviceNetworkEvents
 ### 5. Additional Network Connections - TOR Browser Activity
 
 - **Timestamps:**
-  - `2025-11-08T22:18:08Z` - Connected to `194.164.169.85` on port `443`.
-  - `2025-11-08T22:18:16Z` - Local connection to `127.0.0.1` on port `9150`.
+  - `2025-11-08T22:18:08Z` - Connected to `23.129.64.180` on port `443`.
+  - `2025-11-08T22:18:16Z` - Local connection to `127.0.0.1` on port `9151`.
 - **Event:** Additional TOR network connections were established, indicating ongoing activity by user "Cyber_range" through the TOR browser.
 - **Action:** Multiple successful connections detected.
 
